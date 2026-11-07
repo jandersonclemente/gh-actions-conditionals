@@ -73,6 +73,13 @@ jobs:
       artifacts-name: dist-files
     secrets:
       secret-token: ${{ secrets.GITHUB_TOKEN }}
+  deploy-result:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run: |
+          echo "Deployment status: ${{ needs.deploy.outputs.deploy-status }}"
   report:
     needs: [lint, deploy]
     if: failure()

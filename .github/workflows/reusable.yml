@@ -7,6 +7,10 @@ on:
                 type: string
                 description: The name of the artifacts to download
                 default: dist-files
+        outputs:
+            deploy-status:
+                description: The status of the deployment
+                value: ${{ jobs.deploy.outputs.status }}
         secrets:
             secret-token:
                 required: true
@@ -14,6 +18,8 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-latest
+        outputs:
+            status: ${{ steps.deploy.outputs.status }}
         steps:
             - name: Get build artifacts
               uses: actions/download-artifact@v7
@@ -23,3 +29,6 @@ jobs:
               run: ls
             - name: Output information
               run: echo "Deploying and uploading"
+            - name: Set output
+              id: deploy
+              run: echo "status=success" >> $GITHUB_OUTPUT
